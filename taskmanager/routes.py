@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash
 from taskmanager import app, db
-from taskmanager.forms import RegistrationForm
+from taskmanager.forms import RegistrationForm, LoginForm
 from taskmanager.models import User
 
 # Keep the home route
@@ -22,3 +22,13 @@ def register():
         flash("Account created successfully!", "success")
         return redirect(url_for("home"))
     return render_template("register.html", form=form)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        # Authentication logic will come later
+        flash("Logged in successfully!", "success")
+        return redirect(url_for("home"))
+    return render_template("login.html", form=form)
+
