@@ -27,8 +27,11 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        # Authentication logic will come later
-        flash("Logged in successfully!", "success")
-        return redirect(url_for("home"))
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data:  # Later, replace with password hash check
+            flash("Login successful!", "success")
+            return redirect(url_for("home"))
+        else:
+            flash("Login unsuccessful. Please check your username and password", "danger")
     return render_template("login.html", form=form)
 
