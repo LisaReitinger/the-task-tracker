@@ -1,7 +1,7 @@
 import os
 
 os.environ["IP"] = "0.0.0.0"
-os.environ["PORT"] = "5000"
+os.environ["PORT"] = "5001"
 os.environ["SECRET_KEY"] = "your_secret_key_here"
 os.environ["DEBUG"] = "True"
 os.environ["DEVELOPMENT"] = "True"
