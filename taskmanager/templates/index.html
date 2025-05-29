@@ -1,5 +1,20 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<h2>Welcome to Task Tracker!</h2>
-<p><a href="{{ url_for('register') }}">Register</a> to get started!</p>
+<!-- templates/index.html -->
+{% extends "base.html" %} {% block title %}Task Tracker{% endblock %} {% block
+content %}
+<header>
+  <h1>Task Tracker</h1>
+  <a href="{{ url_for('register') }}"><button>Login/Register</button></a>
+</header>
+
+<main style="text-align: center; margin-top: 50px">
+  <h2>Get Organized with Task Tracker</h2>
+  <a href="{{ url_for('register') }}"><button>Get Started</button></a>
+</main>
+
+<footer style="text-align: center; margin-top: 50px">
+  <nav>
+    <a href="#">About</a> | <a href="#">Features</a> |
+    <a href="#">Contact</a>
+  </nav>
+</footer>
 {% endblock %}
