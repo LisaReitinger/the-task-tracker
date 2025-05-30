@@ -16,7 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from tasks import views  # Assuming your views are in tasks/views.py
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # Home page
+    path('', views.home, name='home'),
+
+    # Register and login
+    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
+
+    # Task views
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('new_task/', views.new_task, name='new_task'),
+    path('error/', views.error, name='error'),  # Error page
 ]
