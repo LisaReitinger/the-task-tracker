@@ -89,10 +89,14 @@ def new_task(request):
 
 @login_required
 def toggle_task_completion(request, pk):
-    task = get_object_or_404(Task, pk=pk, user=request.user)
-    task.completed = not task.completed
-    task.save()
-    return JsonResponse({'completed': task.completed})
+    if request.method == 'POST':
+        print(f"Toggle request received for task ID: {pk}")
+        task = get_object_or_404(Task, pk=pk, user=request.user)
+        task.completed = not task.completed
+        task.save()
+        print(f"Task {pk} completion status: {task.completed}")
+        return JsonResponse({'completed': task.completed})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def error(request):
     return render(request, 'tasks/error.html')

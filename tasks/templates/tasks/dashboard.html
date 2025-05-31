@@ -1,4 +1,5 @@
 {% extends "tasks/base.html" %}
+{% load static %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h2>Welcome, {{ user.username }}!</h2>
@@ -35,4 +36,7 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Include the JavaScript file -->
+<script src="{% static 'tasks/js/main.js' %}"></script>
 {% endblock %}
