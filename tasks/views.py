@@ -38,7 +38,27 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    tasks = Task.objects.filter(user=request.user).order_by('due_date')
+    tasks = Task.objects.filter(user=request.user)
+
+    # Filtering
+    category = request.GET.get('category')
+    priority = request.GET.get('priority')
+    completed = request.GET.get('completed')
+
+    if category:
+        tasks = tasks.filter(category=category)
+    if priority:
+        tasks = tasks.filter(priority=priority)
+    if completed:
+        tasks = tasks.filter(completed=(completed == 'true'))
+
+    # Sorting
+    sort_by = request.GET.get('sort_by')
+    if sort_by == 'due_date':
+        tasks = tasks.order_by('due_date')
+    elif sort_by == 'priority':
+        tasks = tasks.order_by('priority')
+
     return render(request, 'tasks/dashboard.html', {'tasks': tasks})
 
 @login_required
