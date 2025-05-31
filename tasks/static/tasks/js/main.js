@@ -21,9 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 console.log(`Task ${taskId} completion status: ${data.completed}`);
+                showNotification(`Task ${taskId} marked as ${data.completed ? 'completed' : 'incomplete'}`);
             })
             .catch(error => {
                 console.error('Error:', error);
+                showNotification('An error occurred while updating the task.', 'error');
             });
         });
     });
@@ -39,4 +41,17 @@ function getCSRFToken() {
         }
     }
     return '';
+}
+
+// Function to show notifications
+function showNotification(message, type = 'success') {
+    console.log(`Notification: ${message}, Type: ${type}`);
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type}`;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
 }
