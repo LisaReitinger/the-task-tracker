@@ -30,6 +30,8 @@ urlpatterns = [
 
     # Task views
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('new_task/', views.new_task, name='new_task'),
+    path('task/create/', views.task_create, name='task_create'),
+    path('task/update/<int:pk>/', views.task_update, name='task_update'),
+    path('task/delete/<int:pk>/', views.task_delete, name='task_delete'),
     path('error/', views.error, name='error'),  # Error page
 ]

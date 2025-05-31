@@ -2,5 +2,33 @@
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h2>Welcome, {{ user.username }}!</h2>
-<p>This is your dashboard.</p>
+<a href="{% url 'task_create' %}" class="btn btn-primary">Create Task</a>
+<table class="table mt-4">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Due Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td>{{ task.title }}</td>
+            <td>{{ task.category }}</td>
+            <td>{{ task.priority }}</td>
+            <td>{{ task.due_date }}</td>
+            <td>
+                <a href="{% url 'task_update' task.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="POST" action="{% url 'task_delete' task.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
