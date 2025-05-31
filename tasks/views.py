@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import RegisterForm, LoginForm, TaskForm
+from .forms import TaskForm
 from .models import Task
 from django.contrib.auth.decorators import login_required
 
@@ -10,31 +12,35 @@ def home(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('dashboard')
+            form.save()
+            messages.success(request, 'Account created successfully! You can now log in.')
+            return redirect('login')
+        else:
+            for error in form.errors.values():
+                messages.error(request, error)
     else:
-        form = RegisterForm()
+        form = UserCreationForm()
     return render(request, 'tasks/register.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user:
-                login(request, user)
-                return redirect('dashboard')
+            user = form.get_user()
+            login(request, user)
+            messages.success(request, 'Logged in successfully!')
+            return redirect('dashboard')  # Redirect to a dashboard or home page
+        else:
+            messages.error(request, 'Invalid username or password.')
     else:
-        form = LoginForm()
+        form = AuthenticationForm()
     return render(request, 'tasks/login.html', {'form': form})
 
 @login_required
 def dashboard(request):
-    tasks = Task.objects.filter(user=request.user)
-    return render(request, 'tasks/dashboard.html', {'tasks': tasks})
+    return render(request, 'tasks/dashboard.html')
 
 @login_required
 def new_task(request):
@@ -53,4 +59,3 @@ def error(request):
     return render(request, 'tasks/error.html')
 
 
-# Create your views here.

@@ -4,11 +4,18 @@
 {% block title %}Login{% endblock %}
 {% block content %}
 <h2>Login</h2>
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-danger">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
 <form method="POST" action="">
   {% csrf_token %}
   <div>{{ form.username.label_tag }} {{ form.username }}</div>
   <div>{{ form.password.label_tag }} {{ form.password }}</div>
-  <div>{{ form.submit }}</div>
+  <button type="submit" class="btn btn-primary">Login</button>
 </form>
 <p>Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
 {% endblock %}
