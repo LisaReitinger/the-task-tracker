@@ -33,5 +33,6 @@ urlpatterns = [
     path('task/create/', views.task_create, name='task_create'),
     path('task/update/<int:pk>/', views.task_update, name='task_update'),
     path('task/delete/<int:pk>/', views.task_delete, name='task_delete'),
+    path('task/toggle/<int:pk>/', views.toggle_task_completion, name='toggle_task_completion'),
     path('error/', views.error, name='error'),  # Error page
 ]

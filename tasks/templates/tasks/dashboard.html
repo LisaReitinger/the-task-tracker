@@ -10,6 +10,7 @@
             <th>Category</th>
             <th>Priority</th>
             <th>Due Date</th>
+            <th>Completed</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -20,6 +21,9 @@
             <td>{{ task.category }}</td>
             <td>{{ task.priority }}</td>
             <td>{{ task.due_date }}</td>
+            <td>
+                <input type="checkbox" class="task-completed" data-task-id="{{ task.id }}" {% if task.completed %}checked{% endif %}>
+            </td>
             <td>
                 <a href="{% url 'task_update' task.pk %}" class="btn btn-warning btn-sm">Edit</a>
                 <form method="POST" action="{% url 'task_delete' task.pk %}" style="display:inline;">

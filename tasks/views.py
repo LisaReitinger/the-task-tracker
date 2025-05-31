@@ -6,6 +6,7 @@ from django.contrib import messages
 from .forms import TaskForm
 from .models import Task
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 def home(request):
     return render(request, 'tasks/index.html')
@@ -72,6 +73,26 @@ def task_delete(request, pk):
         task.delete()
         return redirect('dashboard')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
+
+@login_required
+def new_task(request):
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.user = request.user
+            task.save()
+            return redirect('dashboard')  # Redirect to the dashboard after creating the task
+    else:
+        form = TaskForm()
+    return render(request, 'tasks/task_form.html', {'form': form})
+
+@login_required
+def toggle_task_completion(request, pk):
+    task = get_object_or_404(Task, pk=pk, user=request.user)
+    task.completed = not task.completed
+    task.save()
+    return JsonResponse({'completed': task.completed})
 
 def error(request):
     return render(request, 'tasks/error.html')
