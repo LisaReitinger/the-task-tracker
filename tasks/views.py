@@ -15,14 +15,10 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.first_name = request.POST.get('first_name')  # Get first name from the form
+            user = form.save(commit=False)
+            user.first_name = ""  # Set an empty string for first_name
             user.save()
-            messages.success(request, 'Account created successfully! You can now log in.')
             return redirect('login')
-        else:
-            for error in form.errors.values():
-                messages.error(request, error)
     else:
         form = UserCreationForm()
     return render(request, 'tasks/register.html', {'form': form})
