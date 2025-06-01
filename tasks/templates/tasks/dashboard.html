@@ -1,76 +1,249 @@
 {% extends "tasks/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="{% static 'tasks/css/styles.css' %}">
-    
-</head>
-<body>
-    {% block title %}Dashboard{% endblock %}
-    {% block content %}
-    <div class="dashboard">
-        <!-- Sidebar -->
-        <aside class="dashboard-sidebar">
-            <h2 class="sidebar-title">Dashboard</h2>
-            <form method="GET" class="sidebar-form">
-                <!-- Filter by Category -->
-                <div class="sidebar-filter">
-                    <label for="category">Filter by Category:</label>
-                    <select name="category" id="category" class="sidebar-select">
-                        <option value="">All</option>
-                        <option value="Work">Work</option>
-                        <option value="Personal">Personal</option>
-                        <option value="Health">Health</option>
-                    </select>
-                </div>
-
-                <!-- Sort by -->
-                <div class="sidebar-sort">
-                    <label for="sort_by">Sort by:</label>
-                    <select name="sort_by" id="sort_by" class="sidebar-select">
-                        <option value="">Default</option>
-                        <option value="due_date">Due Date</option>
-                        <option value="priority">Priority</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-warning">Apply</button>
-            </form>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="dashboard-main">
-            <header class="dashboard-header">
-                <h1 class="dashboard-title">Welcome, {{ user.username|default:"User" }}!</h1>
-                <a href="{% url 'task_create' %}" class="btn btn-warning">Add Task</a>
-            </header>
-
-            <!-- Task List -->
-            <div class="task-list" id="task-list">
-                {% for task in tasks %}
-                <div class="task-card" data-title="{{ task.title|lower }}">
-                    <div class="task-card-header">
-                        <h3 class="task-title">{{ task.title }}</h3>
-                        <span class="task-category">{{ task.category }}</span>
-                    </div>
-                    <div class="task-card-body">
-                        <span class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</span>
-                        <span class="task-due-date">Due: {{ task.due_date|default:"None" }}</span>
-                    </div>
-                    <div class="task-card-footer">
-                        <a href="{% url 'task_update' task.id %}" class="task-edit">✏️</a>
-                        <a href="{% url 'task_delete' task.id %}" class="task-delete">🗑️</a>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </main>
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="dashboard">
+    <!-- Mobile Header with Hamburger Menu -->
+    <div class="mobile-header">
+        <button class="hamburger-btn" id="hamburger-btn">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <h1 class="mobile-title">Dashboard</h1>
+        <a href="{% url 'task_create' %}" class="mobile-add-btn">+</a>
     </div>
-    {% endblock %}
-    <script src="{% static 'tasks/js/main.js' %}"></script>
-</body>
-</html>
+
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2 class="sidebar-title">Dashboard</h2>
+            <button class="sidebar-close" id="sidebar-close">×</button>
+        </div>
+        
+        <!-- Task Statistics -->
+        <div class="task-stats">
+            <div class="stat-item">
+                <span class="stat-number">{{ total_tasks }}</span>
+                <span class="stat-label">Total</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ pending_count }}</span>
+                <span class="stat-label">Pending</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ completed_count }}</span>
+                <span class="stat-label">Done</span>
+            </div>
+        </div>
+        
+        <form method="GET" class="sidebar-form">
+            <!-- Filter by Category -->
+            <div class="sidebar-filter">
+                <label for="category">Filter by Category:</label>
+                <select name="category" id="category" class="sidebar-select">
+                    <option value="">All</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Health">Health</option>
+                </select>
+            </div>
+
+            <!-- Sort by -->
+            <div class="sidebar-filter">
+                <label for="sort_by">Sort by:</label>
+                <select name="sort_by" id="sort_by" class="sidebar-select">
+                    <option value="">Default</option>
+                    <option value="due_date">Due Date</option>
+                    <option value="priority">Priority</option>
+                </select>
+            </div>
+
+            <div class="sidebar-actions">
+                <button type="submit" class="apply-btn">Apply Filters</button>
+            </div>
+        </form>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">Welcome, {{ user.username|default:"User" }}!</h1>
+                <a href="{% url 'task_create' %}" class="add-task-btn">Add Task</a>
+            </div>
+        </header>
+
+        <!-- Task Sections -->
+        <div class="task-sections">
+            <!-- Pending Tasks Section -->
+            <div class="task-section" id="pending-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">📋</span>
+                        Pending Tasks
+                        <span class="task-count">({{ pending_count }})</span>
+                    </h2>
+                </div>
+                
+                <div class="task-list" id="pending-tasks">
+                    {% for task in pending_tasks %}
+                    <div class="task-card" data-task-id="{{ task.id }}" data-title="{{ task.title|lower }}">
+                        <div class="task-checkbox-container">
+                            <input type="checkbox" 
+                                   id="task-pending-{{ task.id }}" 
+                                   class="task-checkbox" 
+                                   data-task-id="{{ task.id }}"
+                                   data-task-name="{{ task.title }}">
+                            <label for="task-pending-{{ task.id }}" class="checkbox-label"></label>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-card-header">
+                                <h3 class="task-title">{{ task.title }}</h3>
+                                <span class="task-category">{{ task.category }}</span>
+                            </div>
+                            <div class="task-card-body">
+                                <div class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</div>
+                                <div class="task-due-date">Due: {{ task.due_date|default:"None" }}</div>
+                            </div>
+                            <div class="task-card-footer">
+                                <div class="task-actions">
+                                    <a href="{% url 'task_update' task.id %}" class="task-edit">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'task_delete' task.id %}" class="task-delete">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                        </svg>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <h3>No pending tasks</h3>
+                        <p>Great job! All tasks are completed.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Completed Tasks Section -->
+            <div class="task-section" id="completed-section">
+                <div class="section-header">
+                    <h2 class="section-title">
+                        <span class="section-icon">✅</span>
+                        Completed Tasks
+                        <span class="task-count">({{ completed_count }})</span>
+                    </h2>
+                    {% if completed_count > 0 %}
+                    <button class="clear-completed-btn" id="clear-completed">Clear All</button>
+                    {% endif %}
+                </div>
+                
+                <div class="task-list completed-tasks" id="completed-tasks">
+                    {% for task in completed_tasks %}
+                    <div class="task-card completed-task" data-task-id="{{ task.id }}" data-title="{{ task.title|lower }}">
+                        <div class="task-checkbox-container">
+                            <input type="checkbox" 
+                                   id="task-completed-{{ task.id }}" 
+                                   class="task-checkbox" 
+                                   data-task-id="{{ task.id }}"
+                                   data-task-name="{{ task.title }}"
+                                   checked>
+                            <label for="task-completed-{{ task.id }}" class="checkbox-label"></label>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-card-header">
+                                <h3 class="task-title">{{ task.title }}</h3>
+                                <span class="task-category">{{ task.category }}</span>
+                            </div>
+                            <div class="task-card-body">
+                                <div class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</div>
+                                <div class="task-due-date">Due: {{ task.due_date|default:"None" }}</div>
+                            </div>
+                            <div class="task-card-footer">
+                                <div class="task-actions">
+                                    <a href="{% url 'task_update' task.id %}" class="task-edit">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                        </svg>
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'task_delete' task.id %}" class="task-delete">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                        </svg>
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <h3>No completed tasks</h3>
+                        <p>Complete some tasks to see them here!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State for No Tasks -->
+        {% if not pending_tasks and not completed_tasks %}
+        <div class="empty-dashboard">
+            <div class="empty-icon">📝</div>
+            <h3>No tasks yet</h3>
+            <p>Create your first task to get started!</p>
+            <a href="{% url 'task_create' %}" class="add-task-btn">Add Your First Task</a>
+        </div>
+        {% endif %}
+    </main>
+</div>
+
+<!-- Notification Container -->
+<div id="notification-container"></div>
+
+<script src="{% static 'tasks/js/main.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Hamburger menu functionality
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarClose = document.getElementById('sidebar-close');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+    function openSidebar() {
+        sidebar.classList.add('sidebar-open');
+        sidebarOverlay.classList.add('overlay-active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('sidebar-open');
+        sidebarOverlay.classList.remove('overlay-active');
+        document.body.style.overflow = '';
+    }
+
+    hamburgerBtn.addEventListener('click', openSidebar);
+    sidebarClose.addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when clicking on a link (for mobile)
+    sidebar.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.type === 'submit') {
+            setTimeout(closeSidebar, 300);
+        }
+    });
+});
+</script>
+{% endblock %}
