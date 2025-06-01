@@ -1,59 +1,64 @@
+console.log('JavaScript file loaded successfully!');
+
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM fully loaded and parsed');
     console.log('JavaScript loaded');
 
-    // Handle task completion toggle
-    const checkboxes = document.querySelectorAll('.task-completed');
-    console.log('Checkboxes:', checkboxes);
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-            console.log('Checkbox changed:', checkbox.dataset);
-            const taskId = checkbox.dataset.taskId;
-            const taskName = checkbox.dataset.taskName;
-            const completed = checkbox.checked;
-            console.log(`Checkbox for task ${taskId} changed to ${completed}`);
+    const taskList = document.getElementById('task-list');
+    const doneTaskList = document.getElementById('done-task-list');
+    const toggleDoneBtn = document.getElementById('toggle-done-btn');
 
-            fetch(`/task/toggle/${taskId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': getCSRFToken(),
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ completed }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(`Task ${taskName} completion status: ${data.completed}`);
-                showNotification(`Task ${taskName} marked as ${data.completed ? 'completed' : 'incomplete'}`);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('An error occurred while updating the task.', 'error');
-            });
-        });
+    // Debugging: Check if elements are found
+    if (!taskList) {
+        console.error('Task list not found!');
+        return;
+    }
+
+    if (!doneTaskList) {
+        console.error('Done task list not found!');
+        return;
+    }
+
+    if (!toggleDoneBtn) {
+        console.error('Toggle Done button not found!');
+        return;
+    }
+
+    console.log('Elements found:', taskList, doneTaskList, toggleDoneBtn);
+
+    // Event listener for task checkboxes
+    taskList.addEventListener('change', (event) => {
+        if (event.target.classList.contains('task-checkbox')) {
+            const taskCard = event.target.closest('.task-card');
+            if (event.target.checked) {
+                moveToDone(taskCard);
+            } else {
+                moveToInProgress(taskCard);
+            }
+        }
     });
 
-// Function to get CSRF token from cookies
-function getCSRFToken() {
-    const cookies = document.cookie.split(';');
-    for (let cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === 'csrftoken') {
-            return value;
+    // Toggle visibility of the "Done" section
+    toggleDoneBtn.addEventListener('click', () => {
+        const doneTasksSection = document.getElementById('done-tasks');
+        if (doneTasksSection.style.display === 'none') {
+            doneTasksSection.style.display = 'block';
+            toggleDoneBtn.textContent = 'Hide Done Tasks';
+        } else {
+            doneTasksSection.style.display = 'none';
+            toggleDoneBtn.textContent = 'Show Done Tasks';
         }
+    });
+
+    // Move task to "Done" section
+    function moveToDone(taskCard) {
+        doneTaskList.appendChild(taskCard);
+        console.log(`Task "${taskCard.dataset.title}" moved to Done`);
     }
-    return '';
-}
 
-// Function to show notifications
-function showNotification(message, type = 'success') {
-    console.log(`Notification: ${message}, Type: ${type}`);
-    const notification = document.createElement('div');
-    notification.className = `alert alert-${type}`;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    setTimeout(() => {
-        notification.remove();
-    }, 3000);
-}
-
+    // Move task back to "In Progress" section
+    function moveToInProgress(taskCard) {
+        taskList.appendChild(taskCard);
+        console.log(`Task "${taskCard.dataset.title}" moved to In Progress`);
+    }
+});

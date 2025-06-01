@@ -1,7 +1,7 @@
 """
 URL configuration for taskmanager_django project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The ⁠ urlpatterns ⁠ list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
 Examples:
 Function views
@@ -24,9 +24,10 @@ urlpatterns = [
     # Home page
     path('', views.home, name='home'),
 
-    # Register and login
+    # Register, login, and logout
     path('register/', views.register, name='register'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 
     # Task views
     path('dashboard/', views.dashboard, name='dashboard'),
