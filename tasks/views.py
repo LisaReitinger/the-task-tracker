@@ -62,9 +62,9 @@ def task_create(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.user = request.user
-            task.save()
-            return redirect('dashboard')
+            task.user = request.user  # Associate the task with the logged-in user
+            task.save()  # Save the task to the database
+            return redirect('dashboard')  # Redirect to the dashboard after saving
     else:
         form = TaskForm()
     return render(request, 'tasks/task_form.html', {'form': form})

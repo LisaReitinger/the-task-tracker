@@ -19,11 +19,22 @@ class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
-# Task Form (ModelForm based on your Task model)
+# Task Form (ModelForm based on Task model)
 class TaskForm(forms.ModelForm):
+    CATEGORY_CHOICES = [
+        ('Work', 'Work'),
+        ('Personal', 'Personal'),
+        ('Health', 'Health'),
+    ]
+
+    category = forms.ChoiceField(choices=CATEGORY_CHOICES, widget=forms.Select(attrs={
+        'class': 'form-control',
+    }))
+    due_date = forms.DateField(widget=forms.DateInput(attrs={
+        'type': 'date',  # HTML5 date picker
+        'class': 'form-control',
+    }))
+
     class Meta:
         model = Task
         fields = ['title', 'description', 'category', 'priority', 'due_date']
-        widgets = {
-            'due_date': forms.DateInput(attrs={'type': 'date'}),
-        }
