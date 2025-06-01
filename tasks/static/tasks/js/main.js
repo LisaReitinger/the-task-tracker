@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-});
 
 // Function to get CSRF token from cookies
 function getCSRFToken() {
@@ -57,3 +56,4 @@ function showNotification(message, type = 'success') {
         notification.remove();
     }, 3000);
 }
+

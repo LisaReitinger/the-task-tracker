@@ -1,68 +1,75 @@
 {% extends "tasks/base.html" %}
 {% load static %}
-{% block title %}Dashboard{% endblock %}
-{% block content %}
-<div class="dashboard">
-    <!-- Sidebar -->
-    <aside class="dashboard-sidebar">
-        <h2 class="sidebar-title">Dashboard</h2>
-        <form method="GET" class="sidebar-form">
-            <!-- Filter by Category -->
-            <div class="sidebar-filter">
-                <label for="category">Filter by Category:</label>
-                <select name="category" id="category" class="sidebar-select">
-                    <option value="">All</option>
-                    <option value="Work">Work</option>
-                    <option value="Personal">Personal</option>
-                    <option value="Health">Health</option>
-                </select>
-            </div>
-
-            <!-- Sort by -->
-            <div class="sidebar-sort">
-                <label for="sort_by">Sort by:</label>
-                <select name="sort_by" id="sort_by" class="sidebar-select">
-                    <option value="">Default</option>
-                    <option value="due_date">Due Date</option>
-                    <option value="priority">Priority</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-warning">Apply</button>
-        </form>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="dashboard-main">
-        <header class="dashboard-header">
-            <h1 class="dashboard-title">Welcome, {{ user.username|default:"User" }}!</h1>
-            <a href="{% url 'task_create' %}" class="btn btn-warning">Add Task</a>
-        </header>
-
-        <!-- Search Bar -->
-        <div class="dashboard-search">
-            <input type="text" placeholder="Search tasks..." class="search-input">
-        </div>
-
-        <!-- Task List -->
-        <div class="task-list">
-            {% for task in tasks %}
-            <div class="task-card">
-                <div class="task-card-header">
-                    <h3 class="task-title">{{ task.title }}</h3>
-                    <span class="task-category">{{ task.category }}</span>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'tasks/css/styles.css' %}">
+    <script src="{% static 'tasks/js/main.js' %}"></script>
+</head>
+<body>
+    {% block title %}Dashboard{% endblock %}
+    {% block content %}
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <h2 class="sidebar-title">Dashboard</h2>
+            <form method="GET" class="sidebar-form">
+                <!-- Filter by Category -->
+                <div class="sidebar-filter">
+                    <label for="category">Filter by Category:</label>
+                    <select name="category" id="category" class="sidebar-select">
+                        <option value="">All</option>
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Health">Health</option>
+                    </select>
                 </div>
-                <div class="task-card-body">
-                    <span class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</span>
-                    <span class="task-due-date">Due: {{ task.due_date|default:"None" }}</span>
+
+                <!-- Sort by -->
+                <div class="sidebar-sort">
+                    <label for="sort_by">Sort by:</label>
+                    <select name="sort_by" id="sort_by" class="sidebar-select">
+                        <option value="">Default</option>
+                        <option value="due_date">Due Date</option>
+                        <option value="priority">Priority</option>
+                    </select>
                 </div>
-                <div class="task-card-footer">
-                    <a href="{% url 'task_update' task.id %}" class="task-edit">✏️</a>
-                    <a href="{% url 'task_delete' task.id %}" class="task-delete">🗑️</a>
+
+                <button type="submit" class="btn btn-warning">Apply</button>
+            </form>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <h1 class="dashboard-title">Welcome, {{ user.username|default:"User" }}!</h1>
+                <a href="{% url 'task_create' %}" class="btn btn-warning">Add Task</a>
+            </header>
+
+            <!-- Task List -->
+            <div class="task-list" id="task-list">
+                {% for task in tasks %}
+                <div class="task-card" data-title="{{ task.title|lower }}">
+                    <div class="task-card-header">
+                        <h3 class="task-title">{{ task.title }}</h3>
+                        <span class="task-category">{{ task.category }}</span>
+                    </div>
+                    <div class="task-card-body">
+                        <span class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+                        <span class="task-due-date">Due: {{ task.due_date|default:"None" }}</span>
+                    </div>
+                    <div class="task-card-footer">
+                        <a href="{% url 'task_update' task.id %}" class="task-edit">✏️</a>
+                        <a href="{% url 'task_delete' task.id %}" class="task-delete">🗑️</a>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-    </main>
-</div>
-{% endblock %}
+        </main>
+    </div>
+    {% endblock %}
+</body>
+</html>
