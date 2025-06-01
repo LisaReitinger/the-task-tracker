@@ -2,20 +2,35 @@
 {% load static %}
 {% block title %}Register{% endblock %}
 {% block content %}
-<h2>Register</h2>
+<section class="register-section">
+    <div class="register-container">
+        <h2 class="register-title">Register</h2>
 
-{% if messages %}
-  {% for message in messages %}
-    <div class="alert alert-danger">{{ message }}</div>
-  {% endfor %}
-{% endif %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="register-alert">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
 
-<form method="POST" action="">
-  {% csrf_token %}
-  <div>{{ form.username.label_tag }} {{ form.username }}</div>
-  <div>{{ form.password1.label_tag }} {{ form.password1 }}</div>
-  <div>{{ form.password2.label_tag }} {{ form.password2 }}</div>
-  <button type="submit" class="btn btn-primary">Register</button>
-</form>
-<p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="register-form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+            <div class="register-form-group">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+            </div>
+            <div class="register-form-group">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+            </div>
+            <button type="submit" class="register-btn">Register</button>
+        </form>
+        <p class="register-footer">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>.
+        </p>
+    </div>
+</section>
 {% endblock %}
