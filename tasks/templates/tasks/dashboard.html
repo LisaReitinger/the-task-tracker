@@ -35,7 +35,7 @@
     <!-- Main Content -->
     <main class="dashboard-main">
         <header class="dashboard-header">
-            <h1 class="dashboard-title">Welcome, {{ user.first_name }}!</h1>
+            <h1 class="dashboard-title">Welcome, {{ user.username|default:"User" }}!</h1>
             <a href="{% url 'task_create' %}" class="btn btn-warning">Add Task</a>
         </header>
 
