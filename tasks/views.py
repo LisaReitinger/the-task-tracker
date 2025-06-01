@@ -34,23 +34,45 @@ def login_view(request):
         form = AuthenticationForm()
     return render(request, 'tasks/login.html', {'form': form})
 
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.')
+    return redirect('home')
+
 @login_required
 def dashboard(request):
-    tasks = Task.objects.filter(user=request.user)
+    # Get all tasks for the user
+    all_tasks = Task.objects.filter(user=request.user)
 
     # Filtering by category
     category = request.GET.get('category')
     if category:
-        tasks = tasks.filter(category=category)
+        all_tasks = all_tasks.filter(category=category)
 
     # Sorting
     sort_by = request.GET.get('sort_by')
     if sort_by == 'due_date':
-        tasks = tasks.order_by('due_date')
+        all_tasks = all_tasks.order_by('due_date')
     elif sort_by == 'priority':
-        tasks = tasks.order_by('priority')
+        # Custom ordering for priority
+        priority_order = {'high': 1, 'medium': 2, 'low': 3}
+        all_tasks = sorted(all_tasks, key=lambda x: priority_order.get(x.priority, 4))
+    else:
+        all_tasks = all_tasks.order_by('-id')  # Default: newest first
 
-    return render(request, 'tasks/dashboard.html', {'tasks': tasks})
+    # Separate completed and pending tasks
+    pending_tasks = [task for task in all_tasks if not task.completed]
+    completed_tasks = [task for task in all_tasks if task.completed]
+
+    context = {
+        'pending_tasks': pending_tasks,
+        'completed_tasks': completed_tasks,
+        'total_tasks': len(all_tasks),
+        'completed_count': len(completed_tasks),
+        'pending_count': len(pending_tasks),
+    }
+
+    return render(request, 'tasks/dashboard.html', context)
 
 @login_required
 def task_create(request):
@@ -111,5 +133,3 @@ def toggle_task_completion(request, pk):
 
 def error(request):
     return render(request, 'tasks/error.html')
-
-
