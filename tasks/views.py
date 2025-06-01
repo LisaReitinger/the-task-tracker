@@ -40,17 +40,10 @@ def login_view(request):
 def dashboard(request):
     tasks = Task.objects.filter(user=request.user)
 
-    # Filtering
+    # Filtering by category
     category = request.GET.get('category')
-    priority = request.GET.get('priority')
-    completed = request.GET.get('completed')
-
     if category:
         tasks = tasks.filter(category=category)
-    if priority:
-        tasks = tasks.filter(priority=priority)
-    if completed:
-        tasks = tasks.filter(completed=(completed == 'true'))
 
     # Sorting
     sort_by = request.GET.get('sort_by')

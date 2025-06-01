@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Checkboxes:', checkboxes);
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', () => {
+            console.log('Checkbox changed:', checkbox.dataset);
             const taskId = checkbox.dataset.taskId;
+            const taskName = checkbox.dataset.taskName;
             const completed = checkbox.checked;
             console.log(`Checkbox for task ${taskId} changed to ${completed}`);
 
@@ -20,8 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(`Task ${taskId} completion status: ${data.completed}`);
-                showNotification(`Task ${taskId} marked as ${data.completed ? 'completed' : 'incomplete'}`);
+                console.log(`Task ${taskName} completion status: ${data.completed}`);
+                showNotification(`Task ${taskName} marked as ${data.completed ? 'completed' : 'incomplete'}`);
             })
             .catch(error => {
                 console.error('Error:', error);

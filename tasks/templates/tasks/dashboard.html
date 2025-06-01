@@ -2,68 +2,67 @@
 {% load static %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2>Welcome, {{ user.username }}!</h2>
-<a href="{% url 'task_create' %}" class="btn btn-primary">Create Task</a>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+        <h2 class="sidebar-title">Dashboard</h2>
+        <form method="GET" class="sidebar-form">
+            <!-- Filter by Category -->
+            <div class="sidebar-filter">
+                <label for="category">Filter by Category:</label>
+                <select name="category" id="category" class="sidebar-select">
+                    <option value="">All</option>
+                    <option value="Work">Work</option>
+                    <option value="Personal">Personal</option>
+                    <option value="Health">Health</option>
+                </select>
+            </div>
 
-<form method="GET" class="mb-3">
-    <select name="category" class="form-select">
-        <option value="">All Categories</option>
-        <option value="Work">Work</option>
-        <option value="Personal">Personal</option>
-        <option value="Health">Health</option>
-    </select>
-    <select name="priority" class="form-select">
-        <option value="">All Priorities</option>
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-    </select>
-    <select name="completed" class="form-select">
-        <option value="">All Tasks</option>
-        <option value="true">Completed</option>
-        <option value="false">Incomplete</option>
-    </select>
-    <select name="sort_by" class="form-select">
-        <option value="">Sort By</option>
-        <option value="due_date">Due Date</option>
-        <option value="priority">Priority</option>
-    </select>
-    <button type="submit" class="btn btn-primary">Apply</button>
-</form>
+            <!-- Sort by -->
+            <div class="sidebar-sort">
+                <label for="sort_by">Sort by:</label>
+                <select name="sort_by" id="sort_by" class="sidebar-select">
+                    <option value="">Default</option>
+                    <option value="due_date">Due Date</option>
+                    <option value="priority">Priority</option>
+                </select>
+            </div>
 
-<table class="table mt-4">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Priority</th>
-            <th>Due Date</th>
-            <th>Completed</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for task in tasks %}
-        <tr>
-            <td>{{ task.title }}</td>
-            <td>{{ task.category }}</td>
-            <td>{{ task.priority }}</td>
-            <td>{{ task.due_date }}</td>
-            <td>
-                <input type="checkbox" class="task-completed" data-task-id="{{ task.id }}" {% if task.completed %}checked{% endif %}>
-            </td>
-            <td>
-                <a href="{% url 'task_update' task.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <form method="POST" action="{% url 'task_delete' task.pk %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+            <button type="submit" class="btn btn-warning">Apply</button>
+        </form>
+    </aside>
 
-<!-- Include the JavaScript file -->
-<script src="{% static 'tasks/js/main.js' %}"></script>
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <h1 class="dashboard-title">Welcome, {{ user.first_name }}!</h1>
+            <a href="{% url 'task_create' %}" class="btn btn-warning">Add Task</a>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="dashboard-search">
+            <input type="text" placeholder="Search tasks..." class="search-input">
+        </div>
+
+        <!-- Task List -->
+        <div class="task-list">
+            {% for task in tasks %}
+            <div class="task-card">
+                <div class="task-card-header">
+                    <h3 class="task-title">{{ task.title }}</h3>
+                    <span class="task-category">{{ task.category }}</span>
+                </div>
+                <div class="task-card-body">
+                    <span class="task-priority priority-{{ task.priority|lower }}">{{ task.priority }}</span>
+                    <span class="task-due-date">Due: {{ task.due_date|default:"None" }}</span>
+                </div>
+                <div class="task-card-footer">
+                    <a href="{% url 'task_update' task.id %}" class="task-edit">✏️</a>
+                    <a href="{% url 'task_delete' task.id %}" class="task-delete">🗑️</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
 {% endblock %}
