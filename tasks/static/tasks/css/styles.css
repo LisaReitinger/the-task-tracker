@@ -1,18 +1,126 @@
-.alert {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #DBD5B5;
+    color: #333;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    margin-left: 0; /* Align to the left */
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    color: #333;
+    font-weight: bold;
+    border: none;
     padding: 10px 20px;
     border-radius: 5px;
-    color: white;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: calc(100vh - 70px); /* Full height minus navbar */
+    padding: 20px;
+    background-color: #DBD5B5;
+}
+
+.hero h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.hero .btn-warning {
+    font-size: 1.2rem;
+    padding: 12px 30px;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+}
+
+.footer a {
+    margin: 0 15px;
     font-size: 14px;
-    z-index: 1000;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.3s ease;
 }
 
-.alert-success {
-    background-color: #28a745;
+.footer a:hover {
+    color: #007bff;
 }
 
-.alert-error {
-    background-color: #dc3545;
+/* Responsive Design (Mobile First) */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 20px; /* Increase padding for better spacing */
+    }
+
+    .navbar-brand {
+        font-size: 28px; /* Increase font size for better readability */
+        align-items: flex-start;
+    }
+
+    .btn-warning {
+        font-size: 1.4rem; /* Increase button font size */
+        padding: 12px 25px; /* Adjust padding for buttons */
+    }
+}
+
+@media (min-width: 768px) {
+    .navbar {
+        padding: 20px 40px; /* Adjust padding for larger screens */
+    }
+
+    .hero h1 {
+        font-size: 5rem; /* Larger font size for desktop */
+    }
+
+    .hero .btn-warning {
+        font-size: 3rem; /* Larger button for desktop */
+    }
+
+    .footer a {
+        font-size: 16px; /* Larger footer links for desktop */
+    }
 }
