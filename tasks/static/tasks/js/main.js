@@ -1,6 +1,3 @@
-// ===== MAIN.JS FILE CONTENT STARTS HERE =====
-// Save this as: tasks/static/tasks/js/main.js
-
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Task Dashboard JavaScript loaded");
 
