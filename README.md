@@ -1,20 +1,10 @@
 # 📋 Task Tracker - Professional Task Management System
 
-![Responsive Design Preview](./docs/screenshots/responsive-preview.png)
-
 	⁠A modern, responsive task management application built with Django that helps users organize, prioritize, and track their daily tasks with an intuitive and beautiful interface.
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://your-task-tracker.herokuapp.com)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge)](https://github.com/yourusername/task-tracker)
-[![Kanban Board](https://img.shields.io/badge/Project-Kanban-orange?style=for-the-badge)](https://github.com/yourusername/task-tracker/projects/1)
-
----
-
-## 📱 Responsive Screenshots
-
-| Mobile | Tablet | Desktop |
-|--------|--------|---------|
-| ![Mobile](./docs/screenshots/mobile-view.png) | ![Tablet](./docs/screenshots/tablet-view.png) | ![Desktop](./docs/screenshots/desktop-view.png) |
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://the-task-tracker-e5ea4f9ef5a4.herokuapp.com/)
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge)](https://github.com/LisaReitinger/the-task-tracker)
+[![Kanban Board](https://img.shields.io/badge/Project-Kanban-orange?style=for-the-badge)](https://github.com/LisaReitinger/the-task-tracker/projects?query=is%3Aopen)
 
 ---
 
@@ -38,10 +28,10 @@
 
 | Color | Hex Code | Usage | Psychology |
 |-------|----------|-------|------------|
-| ![#ffc107](https://via.placeholder.com/20/ffc107/000000?text=+) *Warm Yellow* | ⁠ #ffc107 ⁠ | Primary actions, highlights | Optimism, energy, productivity |
-| ![#333333](https://via.placeholder.com/20/333333/000000?text=+) *Charcoal* | ⁠ #333333 ⁠ | Text, headers | Professionalism, readability |
-| ![#f8f9fa](https://via.placeholder.com/20/f8f9fa/000000?text=+) *Light Gray* | ⁠ #f8f9fa ⁠ | Backgrounds | Clean, minimal, focus |
-| ![#007bff](https://via.placeholder.com/20/007bff/000000?text=+) *Blue* | ⁠ #007bff ⁠ | Links, secondary actions | Trust, reliability |
+| *Warm Yellow* | ⁠ #ffc107 ⁠ | Primary actions, highlights | Optimism, energy, productivity |
+| *Charcoal* | ⁠ #333333 ⁠ | Text, headers | Professionalism, readability |
+| *Light Gray* | ⁠ #f8f9fa ⁠ | Backgrounds | Clean, minimal, focus |
+|  *Blue* | ⁠ #007bff ⁠ | Links, secondary actions | Trust, reliability |
 
 ### Why These Colors?
 
@@ -218,7 +208,7 @@ The color combination creates a *warm yet professional* atmosphere that encourag
 
 ## 📊 Project Management
 
-### 🏗️ Development Methodology
+### Development Methodology
 •⁠  ⁠*Agile Development*: Iterative development with regular updates
 •⁠  ⁠*Mobile-First Approach*: Starting with mobile design and scaling up
 •⁠  ⁠*Progressive Enhancement*: Adding features layer by layer
@@ -249,7 +239,7 @@ The color combination creates a *warm yet professional* atmosphere that encourag
 
 1.⁠ ⁠*Clone the repository*
 ⁠ bash
-git clone https://github.com/yourusername/task-tracker.git
+git clone 
 cd task-tracker
  ⁠
 
@@ -303,10 +293,6 @@ http://localhost:8000
 •⁠  ⁠[ ] *API Access*: RESTful API for third-party integrations
 
 ---
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ### Development Workflow
 1.⁠ ⁠Fork the repository
