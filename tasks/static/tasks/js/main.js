@@ -1,3 +1,6 @@
+// ===== MAIN.JS FILE CONTENT STARTS HERE =====
+// Save this as: tasks/static/tasks/js/main.js
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Task Dashboard JavaScript loaded");
 
@@ -13,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initializeCheckboxes() {
   const checkboxes = document.querySelectorAll(".task-checkbox");
-  console.log(⁠ Found ${checkboxes.length} task checkboxes ⁠);
+  console.log(`Found ${checkboxes.length} task checkboxes`);
 
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener("change", handleTaskToggle);
@@ -40,7 +43,7 @@ function handleTaskToggle(event) {
   taskCard.classList.add("task-updating");
 
   // Make API request
-  fetch(⁠ /task/toggle/${taskId}/ ⁠, {
+  fetch(`/task/toggle/${taskId}/`, {
     method: "POST",
     headers: {
       "X-CSRFToken": getCSRFToken(),
@@ -50,13 +53,13 @@ function handleTaskToggle(event) {
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(⁠ HTTP error! status: ${response.status} ⁠);
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
       return response.json();
     })
     .then((data) => {
       console.log(
-        ⁠ Task ${taskName} completion status updated: ${data.completed} ⁠
+        `Task ${taskName} completion status updated: ${data.completed}`
       );
 
       // Show success notification
@@ -81,7 +84,7 @@ function handleTaskToggle(event) {
 
       // Show error notification
       showNotification(
-        ⁠ Failed to update task "${taskName}". Please try again. ⁠,
+        `Failed to update task "${taskName}". Please try again.`,
         "error"
       );
     })
@@ -179,7 +182,7 @@ function updateSectionCount(sectionId, count) {
   if (section) {
     const countElement = section.querySelector(".task-count");
     if (countElement) {
-      countElement.textContent = ⁠ (${count}) ⁠;
+      countElement.textContent = `(${count})`;
     }
   }
 }
@@ -242,7 +245,7 @@ function handleClearCompleted() {
 
   if (
     confirm(
-      ⁠ Are you sure you want to delete all ${completedTasks.length} completed tasks? ⁠
+      `Are you sure you want to delete all ${completedTasks.length} completed tasks?`
     )
   ) {
     const taskIds = Array.from(completedTasks).map(
@@ -253,7 +256,7 @@ function handleClearCompleted() {
     Promise.all(taskIds.map((taskId) => deleteTask(taskId)))
       .then(() => {
         showNotification(
-          ⁠ Successfully deleted ${taskIds.length} completed tasks ⁠,
+          `Successfully deleted ${taskIds.length} completed tasks`,
           "success"
         );
 
@@ -282,7 +285,7 @@ function handleClearCompleted() {
 }
 
 function deleteTask(taskId) {
-  return fetch(⁠ /task/delete/${taskId}/ ⁠, {
+  return fetch(`/task/delete/${taskId}/`, {
     method: "POST",
     headers: {
       "X-CSRFToken": getCSRFToken(),
@@ -305,7 +308,7 @@ function showNotification(message, type = "success") {
   const container = document.getElementById("notification-container");
   const notification = document.createElement("div");
 
-  notification.className = ⁠ notification notification-${type} ⁠;
+  notification.className = `notification notification-${type}`;
   notification.innerHTML = `
         <div class="notification-content">
             <span class="notification-icon">${
@@ -341,3 +344,4 @@ function getCSRFToken() {
   }
   return "";
 }
+
