@@ -56,9 +56,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'taskmanager_django.wsgi.application'
 
 # Database configuration
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
+if os.environ.get("DEVELOPMENT") == "True":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
